@@ -56,7 +56,7 @@ class FaceDetector():
 
 		return img
 
-	
+	# This one actually paints the target accurately. Hence, not to be used here.
 	def fancyDraw(self, img, bbox, l=30, lt=2, rt=1):
 		x, y, w, h = bbox
 		x1, y1 = x+w, y+h
