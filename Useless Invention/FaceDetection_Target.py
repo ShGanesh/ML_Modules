@@ -30,7 +30,8 @@ class FaceDetector():
 				bboxs.append([bbox, detection.score])
 				
 				if draw:
-					img = self.fancyDraw(img, bbox)
+					# img = self.fancyDraw(img, bbox)
+					img = self.uselessTarget(img, bbox)
 				else:
 					cv2.rectangle(img, bbox, (255, 0, 255), 2)		 # Creates rectagle over each detected face
 				cv2.putText(img, f'{int(detection.score[0]*100)}%', (bbox[0], bbox[1]-20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 2)
@@ -38,10 +39,27 @@ class FaceDetector():
 		return img, bboxs
 	
 	
+	def uselessTarget(self, img, bbox, l=30, lt=2, rt=1):
+		x, y, w, h = bbox
+		w += 15
+		h += 15
+		# Circles
+		cir_coors = (x+int(w), y+int(h))
+		cv2.circle(img, cir_coors, 20, (0, 0, 255), lt)		# Inner
+		cv2.circle(img, cir_coors, int((w+h)/4), (0, 0, 255), lt+3) # Outer
+		
+		# Lines
+		# Inner Vert
+		cv2.line(img, (x+int(w), y+int(h)-12), (x+int(w), y+int(h)+12), (0, 0, 255), rt)
+		# Inner Horz
+		cv2.line(img, (x+int(w-12), y+int(h)), (x+int(w)+12, y+int(h)), (0, 0, 255), rt)
+
+		return img
+
+	
 	def fancyDraw(self, img, bbox, l=30, lt=2, rt=1):
 		x, y, w, h = bbox
 		x1, y1 = x+w, y+h
-		
 		# Circles
 		cir_coors = (x+int(w/2), y+int(h/2))
 		cv2.circle(img, cir_coors, 20, (0, 0, 255), lt)		# Inner
@@ -74,8 +92,8 @@ class FaceDetector():
 		# Bottom Right x1, y1
 		cv2.line(img, (x1, y1), (x1-l, y1), (0, 0, 0), lt)
 		cv2.line(img, (x1, y1), (x1, y1-l), (0, 0, 0), lt)
-
 		return img
+
 
 def main():
 	#cap = cv2.VideoCapture('path/to/video')
